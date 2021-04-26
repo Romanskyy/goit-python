@@ -52,7 +52,7 @@ def folder_processing(path, *new_dirs):
     images, documents, audio, video = new_dirs
 
     if path.exists():
-        if path.is_dir():
+        if path.is_dir() and path.stem not in ('archives', 'video', 'audio', 'documents', 'images'):
             for element in path.iterdir():
                 folder_processing(element, *new_dirs)
                 if element.is_dir():
@@ -174,7 +174,7 @@ def recursive_del_empty_dir(path):
 
 def main():
     new_dirs = ['images', 'documents', 'audio', 'video']
-    new_dirs_path = '/Users/romanskyy/GoIT/разбор_2'
+    new_dirs_path = '/Users/romanskyy/GoIT/Home_Works/Tech_Skills/для_проверки_шаблон'
 
     images, documents, audio, video = dir_creator(new_dirs, new_dirs_path)
 
