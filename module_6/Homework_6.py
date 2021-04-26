@@ -12,14 +12,14 @@ def dir_creator(dirs_list, path_to_create):
     """
 
     #  check if given list is not empty
-    dir_exists = len(dirs_list) > 0
+    dirs_exists = len(dirs_list) > 0
 
     #  creates Path obj
     path = Path(path_to_create)
 
     new_pathes_list = []
 
-    if dir_exists and path.is_dir():
+    if dirs_exists and path.is_dir():
         for fold_name in dirs_list:
             new_folder = path.joinpath(fold_name)
 
@@ -31,9 +31,12 @@ def dir_creator(dirs_list, path_to_create):
             else:
                 new_pathes_list.append(str(new_folder))
         result = tuple(new_pathes_list)
+        sep = '=' * 75
+        print(f'{sep}\nDirs {result} were created successfully.\n')
         return result
     else:
-        print('The info is not correct')
+        print(
+            f'Something went wrong while dir_creator func worked')
 
 
 def folder_processing(path, *new_dirs):
@@ -110,6 +113,9 @@ def folder_processing(path, *new_dirs):
                         print(f'{path.suffix}')
                         print(f'{path.name}')
                         print('*' * 100)
+    else:
+        print(
+            f'There is no such path {path} for proper work of folder_processing func')
 
 
 def normalize(string_to_normalize):
@@ -174,17 +180,25 @@ def recursive_del_empty_dir(path):
 
 def main():
     new_dirs = ['images', 'documents', 'audio', 'video']
-    new_dirs_path = '/Users/romanskyy/GoIT/Home_Works/Tech_Skills/для_проверки_шаблон'
+    new_dirs_path = input('Enter dir path where to create new dirs: ')
 
-    images, documents, audio, video = dir_creator(new_dirs, new_dirs_path)
+    try:
+        images, documents, audio, video = dir_creator(new_dirs, new_dirs_path)
+    except TypeError as ex:
+        print('=' * 75)
+        print(f'Dirs were not created, an exception occurred\n{ex}\n')
 
     if len(sys.argv) < 2:
         print('You entered more arguments than it has to be. Require only one argument.')
     else:
         path = sys.argv[1]
         folder_to_check = Path(path)
-
-    folder_processing(folder_to_check, images, documents, audio, video)
+    try:
+        folder_processing(folder_to_check, images, documents, audio, video)
+    except UnboundLocalError as ex:
+        print('=' * 75)
+        print(
+            f'While folder_processing func worked an exception\n{ex} occurred')
 
     recursive_del_empty_dir(folder_to_check)
 
