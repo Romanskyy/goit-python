@@ -3128,7 +3128,6 @@ VALUES
 --QUERIES
 
 -- 5 студентов с наибольшим средним баллом по всем предметам.
--- REWRITED
 SELECT
 	student_name, 
 	subject_name,
@@ -3146,15 +3145,11 @@ FROM
 	ON s.id = g.student_id 
 	JOIN classes c 
 	ON g.class_id = c.id
-	GROUP BY
-		s.student_name
-		c.class_name
-	ORDER BY g.grade DESC
+	GROUP BY 1,2
+	ORDER BY 4 DESC
 	)
-GROUP BY subject_name
-ORDER BY avg_grade DESC 
--- corrections
-LIMIT 5
+GROUP BY 2
+ORDER BY 4 DESC 
 ;
 
 -- 1 студент с наивысшим средним баллом по одному предмету.
@@ -3175,34 +3170,14 @@ FROM
 	ON s.id = g.student_id 
 	JOIN classes c 
 	ON g.class_id = c.id
-	GROUP BY 
-		s.student_name,
-		c.class_name
-	ORDER BY g.grade DESC
+	GROUP BY 1,2
+	ORDER BY 4 DESC
 	)
-ORDER BY g.grade DESC 
+ORDER BY 4 DESC 
 LIMIT 1
 ;
 
 -- средний балл в группе по одному предмету.
-SELECT
-	gr.group_name,
-	c.class_name,
-	-- added lecture and one particular subject
-	l.lecturer_name, 
-	AVG(g.grade)	
-FROM students s 
-JOIN grades g 
-ON s.id = g.student_id 
-JOIN classes c 
-ON g.class_id = c.id
-JOIN groups gr
-ON gr.id = s.group_id
-JOIN lecturers l 
-ON l.id = g.lecture_id 
-WHERE gr.group_name = 103
-;
-/*
 SELECT
 	gr.group_name,
 	c.class_name,
@@ -3217,7 +3192,6 @@ ON gr.id = s.group_id
 GROUP BY 2,1
 --could add LIMIT1 to take only one group with one class
 ;
-*/
 
 -- cредний балл в потоке.
 SELECT
@@ -3239,21 +3213,9 @@ SELECT
 FROM classes c
 JOIN lecturers l 
 ON c.lecture_id = l.id
--- added WHERE clause, there are particular subject and lecturer
-WHERE l.lecturer_name = 'Strickland'
-GROUP BY c.class_name 
-;
-/*
-SELECT
-	l.lecturer_name,
-	c.class_name 
-FROM classes c
-JOIN lecturers l 
-ON c.lecture_id = l.id
 GROUP BY 2
 ORDER BY 1
 ;
-*/
 
 --Список студентов в группе.
 -- for full list of students in all groupe use ORDER BY 1 instead of WHERE
@@ -3282,28 +3244,11 @@ ON g.student_id = s.id
 JOIN classes c 
 ON c.id = g.class_id 
 WHERE gr.group_name = 101 AND c.class_name = 'Python'
-ORDER BY g.date_to_get_grade 
+ORDER BY 5 
 ;
 
 
 --Оценки студентов в группе по предмету на последнем занятии.
---specified last date of particular subject in particular group
-SELECT 
-	c.class_name,
-	gr.group_name,
-	s.student_name,
-	g.grade,
-	g.date_to_get_grade
-FROM groups gr
-JOIN students s 
-ON gr.id = s.group_id 
-JOIN grades g 
-ON g.student_id = s.id 
-JOIN classes c 
-ON c.id = g.class_id 
-WHERE gr.group_name = 101 AND c.class_name = 'Python' AND date_to_get_grade = '2020-12-11'
-;
-/*
 SELECT 
 	c.class_name,
 	gr.group_name,
@@ -3318,10 +3263,10 @@ ON g.student_id = s.id
 JOIN classes c 
 ON c.id = g.class_id 
 WHERE gr.group_name = 101 AND c.class_name = 'Python'
-ORDER BY g.date_to_get_grade DESC 
+ORDER BY 5 DESC 
 LIMIT 10
 ;
-*/
+
 
 --Список курсов, которые посещает студент.
 SELECT
@@ -3365,27 +3310,10 @@ ON l.id = g.lecture_id
 JOIN students s 
 ON g.student_id = s.id
 WHERE l.lecturer_name = 'Strickland' AND s.student_name = 'Alexander'
-GROUP BY
-	s.student_name,
-	c.class_name,
-	l.lecturer_name
+GROUP BY 2, 3, 1
 ;
 
 --Средний балл, который ставит преподаватель.
--- added classes table and IN clause for lecturers
-SELECT 
-	l.lecturer_name,
-	c.class_name,
-	AVG(g.grade) AS avg_grade_for_class 
-FROM lecturers l 
-JOIN grades g 
-ON l.id = g.lecture_id
-JOIN classes c 
-ON g.class_id = c.id
-WHERE l.lecturer_name IN('Hawkins','Romero','Strickland')
-GROUP BY l.lecturer_name
-;
-/*
 SELECT 
 	l.lecturer_name,
 	AVG(g.grade) AS avg_grade_for_class 
@@ -3394,7 +3322,7 @@ JOIN grades g
 ON l.id = g.lecture_id
 GROUP BY 1
 ;
-*/
+
 
 
 
