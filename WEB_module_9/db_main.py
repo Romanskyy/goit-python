@@ -1,7 +1,7 @@
 import sys
 import re
 import sqlalchemy
-from sqlalchemy import exists, and_
+from sqlalchemy import exists, and_, update
 from sqlalchemy.orm import joinedload, load_only, selectinload
 from db_models import session, engine, metadata, Contact, Phone
 
@@ -68,7 +68,7 @@ def parsing_user_input(string):
 
     # parsing for assigning comand
     raw_user_input = re.search(
-        r'\badd\b|\bdelete\b|\bphone\b|\bshow\s{1}all\b|\bgood\s{1}bye\b|\bclose\b|\bexit\b|[.]{1}', string)
+        r'\badd\b|\bchange\b|\bdelete\b|\bphone\b|\bshow\s{1}all\b|\bgood\s{1}bye\b|\bclose\b|\bexit\b|[.]{1}', string)
     command = raw_user_input.group() if raw_user_input else False
 
     # parsing for assigning phone number
@@ -78,7 +78,7 @@ def parsing_user_input(string):
 
     # parsing for assigning name
     raw_name = re.search(
-        r'(?!.*(add|delete|phone|show|all|good|bye|close|exit|\.{1})+)\s[a-zA-Z]+\s{1}[a-zA-Z]+', string)
+        r'(?!.*(add|delete|change|phone|show|all|good|bye|close|exit|\.{1})+)\s[a-zA-Z]+\s{1}[a-zA-Z]+', string)
     name = raw_name.group().strip().title() if raw_name else False
 
     data = (name, phone)
@@ -133,6 +133,44 @@ def delete_contact(data):
     return output
 
 
+def change_phone(data):
+    name, phone = data
+    result = session.query(Contact.id, Contact.contact_name,
+                           Phone.phone, Phone.id).join(Phone).filter(Contact.contact_name == name).all()
+
+    contact_phones = {}
+
+    if result:
+        output = ''
+        for el in result:
+            contact_phones[el[-1]] = el[2]
+
+            output += f'\tContact data: {el[1]} - {el[2]}. Phone id - {el[-1]}\n'
+    else:
+        output = '\tThere is not such contact.'
+    print('=' * 75)
+    print(output)
+
+    user_imput = int(input('Enter phone <id> for phone you want to change: '))
+    if user_imput in contact_phones.keys():
+        new_phone = input('Enter new contact phone number: ')
+
+        raw_phone = re.search(
+            r'38(097|098|096|068|067|063|068|099)\d{7}', new_phone)
+        new_phone = raw_phone.group() if raw_phone else False
+        if new_phone:
+            new = session.query(Phone).get(user_imput)
+            new.phone = new_phone
+            session.add(new)
+            session.commit()
+            output = '\tContact was successfully changed.'
+        else:
+            output = '\tInvalid phone format. Repeat command'
+    else:
+        output = '\tThere is not such contact. Repeat command'
+    return output
+
+
 @input_error
 def handler_func(command, data):
 
@@ -150,6 +188,7 @@ COMMANDS = {
     'add': add_phone,
     'show all': show_all_contacts,
     'phone': show_one_contact_data,
+    'change': change_phone,
     'delete': delete_contact,
     'good bye': save_and_exit,
     'close': save_and_exit,
