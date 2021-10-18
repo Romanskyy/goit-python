@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<div class="container text-center">
+    <h1>Income page</h1>
+    <br>
+    <form action="{% url 'home' %}">
+        <label for="income">Enter current income:</label><br>
+        <input type="text" id="income" name="income""><br><br>
+        <label for="comment">Comment for income:</label><br>
+        <input type="text" id="comment" name="comment""><br><br>       
+        <input type="submit" value="     PROCESS DATA     " class="btn btn-primary">
+        <!-- <ul>
+            {% for el in info %}
+                <h3>{{ el }}</h3>
+            {%  endfor %}
+        </ul> -->
+    </form>
+</div>
