@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<div class="container text-md-left">
+    <h1>Your spending</h1>
+    <br>
+    <form action="{% url 'fin_con:spending' %}" method="post">
+        {% csrf_token %}
+        <select name="category">
+            <option value="home">home</option>
+            <option value="food">food</option>
+            <option value="transport">transport</option>
+            <option value="activities">activities</option>
+            <option value="sport">sport</option>
+            <option value="other" selected="selected">other</option>
+        </select> categories
+        <br>
+        <label for="income">Enter sum:</label><br>
+        <input type="text" id="spending" name="spending"">
+        <br>
+        <label for="spending_date">Spending date:</label><br>
+        <input type="date" id="spending_date" name="spending_date">
+        <br>
+        <label for=" comment">Comment for spending:</label><br>
+        <input type="text" id="comment" name="comment""><br><br>
+        <br>
+        <input type="submit" value="     PROCESS DATA     " class="btn btn-primary">
+        <br>
+        <br>
+        <a href="{% url 'fin_con:home' %}" class="btn btn-info">Your home page</a>
+        <br>
+        <br>
+        <a href="{% url 'fin_con:report' %}" class="btn btn-info">Your reports page</a>
+    </form>
+</div>

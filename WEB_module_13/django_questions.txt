@@ -1,0 +1,5 @@
+how to change time zone for admin?
+link to explane question-> 
+https://docs.djangoproject.com/en/3.0/topics/i18n/timezones/#selecting-the-current-time-zone
+
+after sending data from form and renew page info resent. how to clear?

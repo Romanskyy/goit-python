@@ -1,19 +1,25 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-<div class="container text-center">
+<div class="container text-md-left">
     <h1>Income page</h1>
     <br>
-    <form action="{% url 'home' %}">
+    <form action="{% url 'fin_con:home' %}" method="post">
+        {% csrf_token %}
         <label for="income">Enter current income:</label><br>
-        <input type="text" id="income" name="income""><br><br>
+        <input type="text" id="income" name="income""><br>
+
+        <label for="income_date">Date for income:</label><br>
+        <input type="date" id="income_date" name="income_date">
+        <br>
+
         <label for="comment">Comment for income:</label><br>
         <input type="text" id="comment" name="comment""><br><br>       
-        <input type="submit" value="     PROCESS DATA     " class="btn btn-primary">
-        <!-- <ul>
-            {% for el in info %}
-                <h3>{{ el }}</h3>
-            {%  endfor %}
-        </ul> -->
+        <input type="submit" value="     PROCESS DATA     " onclick="submitForm()" class="btn btn-primary">
     </form>
+    <br>
+    <a href="{% url 'fin_con:spending' %}" class="btn btn-info">Your spending page</a>
+    <br>
+    <br>
+    <a href="{% url 'fin_con:report' %}" class="btn btn-info">Your reports page</a>
 </div>

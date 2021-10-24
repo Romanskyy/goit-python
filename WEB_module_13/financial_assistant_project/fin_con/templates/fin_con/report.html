@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<div class="container text-md-left">
+    <h1>Your report page</h1>
+    <br>
+    <form action="{% url 'fin_con:report' %}">
+        <select name="report_type">
+            <option value="income">income report</option>
+            <option value="expenses">expenses report</option>
+            <option value="no_report" selected="selected">no report</option>
+        </select> REPORT TYPE
+        <br>
+        <br>
+        <h4>Choose report period</h4>
+        <label for="start_date">From:</label><br>
+        <input type="date" id="start_date" name="start_date">
+        <br>
+        <label for="end_date">To:</label><br>
+        <input type="date" id="end_date" name="end_date">
+        <br>
+        <br>
+        <h4>Expenses report categories</h4>
+        <select name="category">
+            <option value="home">home</option>
+            <option value="food">food</option>
+            <option value="transport">transport</option>
+            <option value="activities">activities</option>
+            <option value="sport">sport</option>
+            <option value="full_report" selected="selected">full report</option>
+        </select> categories
+        <br>
+        <br>
+        <input type="submit" value="     PROCESS DATA     " class="btn btn-primary">
+        <br>
+        <br>
+        <a href="{% url 'fin_con:home' %}" class="btn btn-info">Your home page</a>
+        <br>
+    </form>
+    {% for el in info %}
+        <br>{{ el }}
+    {% endfor %}
+
+</div>
