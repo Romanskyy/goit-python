@@ -10,8 +10,7 @@ import re
 
 class AddressBook(UserDict):
 
-    """
-    The class inherits from UserDict class.
+    """The class inherits from UserDict class.
 
     Creates <dict> for sroting adress book data.
 
@@ -27,16 +26,36 @@ class AddressBook(UserDict):
 
     <search_contacts(self, user_input)>, method searches contact's data
     by the given from a user partial info
-
     """
 
     def add_record(self, name, value):
+        """Adds record with key <name> and value to it
+
+        Parameters
+        ----------
+        name: str
+        value: str
+
+        Returns
+        -------
+        self.data: dict
+        """
         self.data[name] = value
         return self.data
 
-    def iterator(self, n):
-        if len(self.data) < n:
-            raise IndexError()
+    def iterator(self, num):
+        """Function returns <num> records from address_book
+
+        Parameters
+        ----------
+        num: int
+
+        Returns
+        -------
+        Info about result func has worked or None
+        """
+        if len(self.data) < num:
+            info = "Index is out or range"
         else:
             data_list = list(self.data.items())
             while data_list:
@@ -45,13 +64,24 @@ class AddressBook(UserDict):
                         f'\n\tContact <{el[0]}> has following data:\
                         \n\tbirthday info - {list(el[1].items())[0][1]}\
                         \n\tphon/s - {"; ".join(list(el[1].items())[1][1])}'
-                        for el in data_list[:n]
+                        for el in data_list[:num]
                     ]
                 )
                 yield result
-                data_list = data_list[n:]
+                data_list = data_list[num:]
+        return info or None
 
     def search_contacts(self, user_input):
+        """Function search specified contact from address book
+
+        Parameters
+        ----------
+        user_input: str, phone number
+
+        Returns
+        -------
+        Contact data or None
+        """
         info_list = []
         for cont in self.data:
             match_name_result = re.search(
@@ -64,7 +94,7 @@ class AddressBook(UserDict):
             elif match_phone_result is not None:
                 info_list.append({cont: self.data[cont]})
         if len(info_list) == 0:
-            return None
+            result = None
         else:
             cont_info = ""
             for val in info_list:
@@ -72,76 +102,106 @@ class AddressBook(UserDict):
                     cont_info += f'\n\tThe contact {name} has\n\tbirthday info - \
                     {list(info_dict.items())[0][1]}\n\tphone/s - \
                     {"; ".join(list(info_dict.items())[1][1])}.\n'
-            return cont_info
+            result = cont_info
+        return result
 
 
-class Birthday():
-
-    """
-    The class inherits from Fiel class.
+class Birthday:
+    """The class inherits from Fiel class.
 
     Creates user's birthday(required attribute).
-
     """
 
     def __init__(self, birthday):
+        """Constructor Birthday class"""
         self.__birthday = birthday
 
     @property
     def birthday(self):
+        """Function creates class's property with @property decorator"""
         return self.__birthday
 
     @birthday.setter
     def birthday(self, birthday):
+        """Function-setter validates and assign
+        value to class's field
+
+        Parameters
+        ----------
+        birthday: str
+
+        Returns
+        -------
+        Info-string in case of not correct data or None
+        """
         real_time = datetime.now()
         datetime_dirthday = datetime.strptime(birthday, "%d.%m.%Y")
         checking_age = real_time.year - datetime_dirthday.year
         if checking_age >= 100:
-            raise Exception(
-                f"Hey, grandpa! You are too old) Check if you have entered correct birthday date."
-            )
+            result = "Hey, grandpa! You are too old) Check if \
+            you have entered correct birthday date."
         elif real_time.year <= datetime_dirthday.year:
-            raise Exception(
-                f"Hey, baby! You are too young) Check if you have entered correct birthday date."
-            )
-        else:
-            self.__birthday = birthday
+            result = "Hey, baby! You are too young) Check if \
+            you have entered correct birthday date."
+        self.__birthday = birthday
+        return result or None
+
+    def birthday_year(self):
+        """Fuction returns the year of birth for contact"""
+        return self.__birthday.year
 
 
-class Name():
+class Name:
 
-    """
-    The class inherits from Fiel class.
+    """The class inherits from Fiel class.
 
     Creates user's name(required attribute) starts from an
     uppercase letter with the following lowercase letters.
-
     """
 
     def __init__(self, name):
+        """Constructor for Name class"""
         self.__name = None
         self.name = name
 
     @property
     def name(self):
+        """Function creates class's property with @property decorator"""
         return self.__name
 
     @name.setter
     def name(self, name):
+        """Function-setter validates and assign
+        value to class's field
+
+        Parameters
+        ----------
+        name: str
+
+        Returns
+        -------
+        Info-string in case of not correct data or None
+        """
         if not len(name.split(" ")) == 2:
-            raise Exception("Enter fool name.")
+            result = "Enter fool name."
         else:
             name = name.casefold().title()
             self.__name = name
+        return result or None
+
+    def introdus_instanse(self):
+        """Full form or instanse's name"""
+        return f"My name is {self.name}"
 
 
-class Phone():
+class Phone:
     """The class inherits from Fiel class.
 
     Creates user's phone field(optional attribute).
     """
 
     def __init__(self, phone=None):
+        """Constructor for Phone class"""
         if phone is None:
             self.__phone = phone
         else:
@@ -155,10 +215,22 @@ class Phone():
 
     @property
     def phone(self):
+        """Function creates class's property with @property decorator"""
         return self.__phone
 
     @phone.setter
     def phone(self, phone):
+        """Function-setter validates and assign
+        value to class's field
+
+        Parameters
+        ----------
+        phone: str
+
+        Returns
+        -------
+        None
+        """
         phone = (
             phone.strip()
             .replace("(", "")
@@ -167,6 +239,10 @@ class Phone():
             .replace(" ", "")
         )
         self.__phone = phone
+
+    def get_network(self):
+        """Simple func to return network's code"""
+        return self.phone[:6]
 
 
 class Record:
@@ -183,10 +259,22 @@ class Record:
     """
 
     def __init__(self, birthday=None):
+        """Constructor for Phone class"""
         self.birthday = birthday
         self.phones = []
 
     def add_contact_phonenumb(self, phone_numb):
+        """Function validates entered phone number
+        and adds to contact's list of phones
+
+        Parameters
+        ----------
+        phone_numb: str
+
+        Returns
+        -------
+        list of phones
+        """
         phone_numb = str(
             phone_numb.strip()
             .replace("(", "")
@@ -198,6 +286,15 @@ class Record:
         return self.phones
 
     def days_to_birthday(self):
+        """Function calculates amount of days till following birthday
+
+        Parameters
+        ----------
+
+        Returns
+        -------
+        amount of days till birthday or info-string
+        """
         if self.birthday is not None:
             real_time = datetime.now()
             datetime_dirthday = datetime.strptime(self.birthday, "%d.%m.%Y")
@@ -211,5 +308,7 @@ class Record:
                 if real_time.date() < this_year_birthday.date()
                 else next_year_days_count
             )
-            result = f"\n\tThere are {result} days left until the contact's next birthday"
+            result = (
+                f"\n\tThere are {result} days left until the contact's next birthday"
+            )
         return result or "\n\tThere is no birthday date for contact"
