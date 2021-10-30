@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 pylint = "*"
 black = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [dev-packages]
 

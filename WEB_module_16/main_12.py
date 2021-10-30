@@ -56,8 +56,9 @@ def add_phone(address_book, data):
                 "\n\tEnter contact's birthday in format <dd.mm.yyyy>: "
             )
             record.birthday = raw_birthday
-        birthday_info = record.days_to_birthday()
-        print(birthday_info)
+            birthday_info = record.days_to_birthday()
+            print(birthday_info)
+        print('*' * 80)
         address_book.add_record(name, record.__dict__)
         result = (
             f"\n\tThe contact <{name}> was added to address book with phone <{phone}>."
@@ -69,8 +70,6 @@ def add_phone(address_book, data):
         address_book[name]["phones"].append(phone)
         result = f"\n\tThe phone <{phone}> for contact <{name}>\n\t\
         was successfully added to address book."
-    else:
-        raise ValueError
     return result
 
 
@@ -86,11 +85,13 @@ def change_existing_phone(address_book, data):
     -------
     Info-string about condition anter function has worked
     """
+
     name, phone = inner_parser(data)
     if name in address_book and phone in address_book[name]["phones"]:
         old_phone = phone
         new_phone = input(f"\n\tEnter new phone for contact <{name}>: ")
-        raw_phone = re.search(r"38(097|098|068|067|063|068|099)\d{7}", new_phone)
+        raw_phone = re.search(
+            r"38(097|098|068|067|063|068|099)\d{7}", new_phone)
         phone = raw_phone.group().strip() if raw_phone else False
         if phone:
             address_book[name]["phones"].remove(old_phone)
@@ -162,14 +163,21 @@ def input_error(func):
     """
 
     def wrapper(*args):
+        # try:
+        #     result = func(*args)
+        #     return result
+        # except StopIteration:
+        #     ex_info = "\n\tYou have seem all contact's info."
+        # except (ValueError, KeyError) as ex:
+        #     ex_info = ex
+        # return ex_info
         try:
             result = func(*args)
-            return result
         except StopIteration:
-            ex_info = "\n\tYou have seem all contact's info."
+            result = "\n\tYou have seen all contact's info."
         except (ValueError, KeyError) as ex:
-            ex_info = ex
-        return ex_info
+            result = ex
+        return result
 
     return wrapper
 
@@ -183,11 +191,16 @@ def parsing_user_input(string):
     """
 
     # parsing for assigning comand
-    raw_user_input = re.search(
-        r"\badd\b|\bchange\b|\bphones\b|\bshow\s{1}all\b\
-        |\bgood\s{1}bye\b|\bclose\b|\bexit\b|[.]{1}",
-        string,
+    re_str = (
+        r'\badd\b|\bchange\b|\bphones\b|\bshow\s{1}all\b|\bgood\s{1}bye\b|\bclose\b|[.]{1}'
     )
+    print(re_str)
+    raw_user_input = re.search(re_str, string)
+
+    print(">" * 80)
+    print(raw_user_input)
+    print("<" * 80)
+
     command = raw_user_input.group() if raw_user_input else False
 
     # parsing for assigning phone number
@@ -223,9 +236,9 @@ def show_all_contacts(address_book):
     while True:
         print(next(info))
         user_input = input("\n\tDo you want to prosside y|n: ").casefold()
-        if user_input == "n":
-            result = "\n\tContinue your work with commands."
-        return result or None
+        if user_input != 'n':
+            continue
+        return '\n\tContinue your work with commands.'
 
 
 def show_one_contact_data(address_book):
@@ -259,12 +272,23 @@ def handler_func(command, address_book, data):
     -------
     result of worked function or ValueError
     """
+    result = False
     if command in COMMANDS:
         if command in ["show all", "good bye", "close", "exit", ".", "phones"]:
             result = COMMANDS[command](address_book)
+
+            print("=" * 80)
+            print(result)
+            print("=" * 80)
+
         else:
             result = COMMANDS[command](address_book, data)
-    return result or ValueError
+
+            print("-" * 80)
+            print(result)
+            print("-" * 80)
+
+    return result or ValueError('\n\tEnter correct data for search.')
 
 
 COMMANDS = {
@@ -311,7 +335,8 @@ def main():
 
     while not initial_user_comand == "hello":
         print("\n\tIn order to work with address book enter <Hello>")
-        initial_user_comand = input("\n\tWaitting for your comand: ").casefold()
+        initial_user_comand = input(
+            "\n\tWaitting for your comand: ").casefold()
 
     path = Path("data.bin")
     path_exists = path.is_file()
@@ -319,7 +344,7 @@ def main():
     address_book = deserialize_data(path) if path_exists else AddressBook()
 
     print("*" * 80)
-    print(address_book)
+    print(address_book, type(address_book))
     print("*" * 80)
 
     if path_exists:
@@ -334,6 +359,10 @@ def main():
 
         user_command = input("\nWaitting for your comand: ")
         user_command = user_command.casefold()
+
+        print("m" * 80)
+        print(user_command)
+        print(">" * 80)
 
         command, data = parsing_user_input(user_command)
         print(command, data)

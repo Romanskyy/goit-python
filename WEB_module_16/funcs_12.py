@@ -54,6 +54,7 @@ class AddressBook(UserDict):
         -------
         Info about result func has worked or None
         """
+        info = False
         if len(self.data) < num:
             info = "Index is out or range"
         else:
@@ -99,9 +100,9 @@ class AddressBook(UserDict):
             cont_info = ""
             for val in info_list:
                 for name, info_dict in val.items():
-                    cont_info += f'\n\tThe contact {name} has\n\tbirthday info - \
-                    {list(info_dict.items())[0][1]}\n\tphone/s - \
-                    {"; ".join(list(info_dict.items())[1][1])}.\n'
+                    cont_info += f'\n\tThe contact {name} has\
+        \n\tbirthday info - {list(info_dict.items())[0][1]}\
+        \n\tphone/s - {"; ".join(list(info_dict.items())[1][1])}.\n'
             result = cont_info
         return result
 
@@ -182,6 +183,7 @@ class Name:
         -------
         Info-string in case of not correct data or None
         """
+        result = False
         if not len(name.split(" ")) == 2:
             result = "Enter fool name."
         else:
@@ -295,6 +297,7 @@ class Record:
         -------
         amount of days till birthday or info-string
         """
+        result = False
         if self.birthday is not None:
             real_time = datetime.now()
             datetime_dirthday = datetime.strptime(self.birthday, "%d.%m.%Y")
