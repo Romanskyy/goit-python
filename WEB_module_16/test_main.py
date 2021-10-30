@@ -6,7 +6,9 @@ from main_12 import (
     deserialize_data,
     parsing_user_input,
     handler_func,
-    show_one_contact_data,)
+    show_one_contact_data,
+    save_and_exit,
+    serialize_data,)
 from funcs_12 import Name, Phone, Record, AddressBook
 
 
@@ -132,4 +134,34 @@ def test_show_one_contact_data():
         \n\tbirthday info - None\
         \n\tphone/s - 380675119811.\n'
 
+    wrong_result = None
+
     assert show_one_contact_data(address_book) == result
+    assert show_one_contact_data(address_book) == wrong_result
+
+
+def test_serislize_data():
+    example_data = {'some': 10}
+    path = 'some.bin'
+
+    assert serialize_data(example_data, path) is None
+
+
+def test_get_network():
+    raw_num = '3(8067)511-98-11'
+    result = '067'
+    assert Phone(raw_num).get_network() == result
+
+
+def test_add_contact_phonenumber():
+    record = Record()
+    record.add_contact_phonenumb('3(8067)511-98-11')
+    result = ['380675119811']
+    assert record.phones == result
+
+
+def test_days_to_birthday():
+    rom = Record('03.06.1978')
+    assert rom.days_to_birthday() == (
+        "\n\tThere are 215 days left until the contact's next birthday"
+    )

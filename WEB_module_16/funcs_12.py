@@ -244,7 +244,7 @@ class Phone:
 
     def get_network(self):
         """Simple func to return network's code"""
-        return self.phone[:6]
+        return self.phone[2:5]
 
 
 class Record:
