@@ -85,7 +85,7 @@ def change_existing_phone(address_book, data):
     -------
     Info-string about condition anter function has worked
     """
-
+    result = '\n\tEnter correct number.'
     name, phone = inner_parser(data)
     if name in address_book and phone in address_book[name]["phones"]:
         old_phone = phone
@@ -97,9 +97,10 @@ def change_existing_phone(address_book, data):
             address_book[name]["phones"].remove(old_phone)
             phone = Phone(phone).phone
             address_book[name]["phones"].append(phone)
-            result = f"\n\tPhone number <{old_phone}> for contact <{name}>\n\t\
-            was successfully changed for <{phone}>."
-    return result or ValueError
+            result = (
+                f"\n\t<{old_phone}> for contact <{name}>\n\twas changed for <{phone}>."
+            )
+    return result
 
 
 def deserialize_data(file_name):
@@ -163,14 +164,6 @@ def input_error(func):
     """
 
     def wrapper(*args):
-        # try:
-        #     result = func(*args)
-        #     return result
-        # except StopIteration:
-        #     ex_info = "\n\tYou have seem all contact's info."
-        # except (ValueError, KeyError) as ex:
-        #     ex_info = ex
-        # return ex_info
         try:
             result = func(*args)
         except StopIteration:
@@ -196,11 +189,6 @@ def parsing_user_input(string):
     )
     print(re_str)
     raw_user_input = re.search(re_str, string)
-
-    print(">" * 80)
-    print(raw_user_input)
-    print("<" * 80)
-
     command = raw_user_input.group() if raw_user_input else False
 
     # parsing for assigning phone number
@@ -276,18 +264,8 @@ def handler_func(command, address_book, data):
     if command in COMMANDS:
         if command in ["show all", "good bye", "close", "exit", ".", "phones"]:
             result = COMMANDS[command](address_book)
-
-            print("=" * 80)
-            print(result)
-            print("=" * 80)
-
         else:
             result = COMMANDS[command](address_book, data)
-
-            print("-" * 80)
-            print(result)
-            print("-" * 80)
-
     return result or ValueError('\n\tEnter correct data for search.')
 
 
@@ -342,11 +320,6 @@ def main():
     path_exists = path.is_file()
 
     address_book = deserialize_data(path) if path_exists else AddressBook()
-
-    print("*" * 80)
-    print(address_book, type(address_book))
-    print("*" * 80)
-
     if path_exists:
         print(
             f"\n\tYou address book has been restored from <{path}> file,\n\tand it's ready to work."
@@ -359,10 +332,6 @@ def main():
 
         user_command = input("\nWaitting for your comand: ")
         user_command = user_command.casefold()
-
-        print("m" * 80)
-        print(user_command)
-        print(">" * 80)
 
         command, data = parsing_user_input(user_command)
         print(command, data)

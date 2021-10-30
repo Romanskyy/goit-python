@@ -106,6 +106,13 @@ class AddressBook(UserDict):
             result = cont_info
         return result
 
+    def __repr__(self):
+        """String representation method"""
+        result = ''
+        for key, value in self.data.items():
+            result += f'{key}={value}'
+        return result
+
 
 class Birthday:
     """The class inherits from Fiel class.
@@ -184,14 +191,14 @@ class Name:
         Info-string in case of not correct data or None
         """
         result = False
-        if not len(name.split(" ")) == 2:
+        if len(name.split(" ")) != 2:
             result = "Enter fool name."
         else:
             name = name.casefold().title()
             self.__name = name
         return result or None
 
-    def introdus_instanse(self):
+    def introduse_instanse(self):
         """Full form or instanse's name"""
         return f"My name is {self.name}"
 
